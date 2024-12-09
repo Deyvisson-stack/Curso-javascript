@@ -6,4 +6,4 @@ function add() {
 }
 add();
 add();
-console.log(count);
+// aaaaaaaaaaaaa
