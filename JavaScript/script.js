@@ -1,9 +1,5 @@
-let count = 0
+let info = ["Deyvisson Henrique", "Deyvisson", "Henrique", "@Deyvi"];
 
-function add() {
-   let count = 0
-   count++;
-}
-add();
-add();
-// aaaaaaaaaaaaa
+let = [nomeCompleto, , , Instagram] = info;
+
+console.log(nomeCompleto, Instagram);

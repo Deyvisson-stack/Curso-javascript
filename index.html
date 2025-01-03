@@ -3,13 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Feliz Aniversário, Laurinhaaa!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle, #ff9a9e, #fad0c4);
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin: 0;
+            margin-top: 20px;
+            animation: bounce 2s infinite;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e55a4f;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Olá Javascript</h1>
+    <div class="container">
+        <h1>Feliz Aniversário, Laurinhaaa! 🎉</h1>
+        <p>Que seu dia seja tão incrível quanto você! 💖</p>
+        <button onclick="celebrate()">Estourar Confetes e Foguetes 🚀</button>
+        <canvas id="confettiCanvas"></canvas>
+    </div>
+    <script>
+        function celebrate() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
+            const confettiParticles = [];
+            const rocketParticles = [];
+            const colors = ['#ff6f61', '#ffcc00', '#66b3ff', '#ff99cc', '#98fb98'];
 
+            function createConfetti() {
+                for (let i = 0; i < 200; i++) {
+                    confettiParticles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        r: Math.random() * 5 + 1,
+                        dx: Math.random() * 2 - 1,
+                        dy: Math.random() * 2 - 1,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                    });
+                }
+            }
 
-    <script src="JavaScript/script.js"></script>
+            function createRockets() {
+                for (let i = 0; i < 5; i++) {
+                    rocketParticles.push({
+                        x: Math.random() * canvas.width,
+                        y: canvas.height,
+                        size: Math.random() * 10 + 5,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        explosion: false,
+                        sparks: [],
+                    });
+                }
+            }
+
+            function drawConfetti() {
+                confettiParticles.forEach((p) => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+            }
+
+            function drawRockets() {
+                rocketParticles.forEach((r) => {
+                    if (!r.explosion) {
+                        ctx.beginPath();
+                        ctx.arc(r.x, r.y, r.size, 0, Math.PI * 2);
+                        ctx.fillStyle = r.color;
+                        ctx.fill();
+                    }
+                });
+            }
+
+            function drawSparks() {
+                rocketParticles.forEach((r) => {
+                    if (r.explosion) {
+                        r.sparks.forEach((s) => {
+                            ctx.beginPath();
+                            ctx.arc(s.x, s.y, 2, 0, Math.PI * 2);
+                            ctx.fillStyle = s.color;
+                            ctx.fill();
+                        });
+                    }
+                });
+            }
+
+            function updateConfetti() {
+                confettiParticles.forEach((p) => {
+                    p.x += p.dx;
+                    p.y += p.dy;
+                    if (p.x > canvas.width || p.x < 0) p.dx = -p.dx;
+                    if (p.y > canvas.height || p.y < 0) p.dy = -p.dy;
+                });
+            }
+
+            function updateRockets() {
+                rocketParticles.forEach((r) => {
+                    if (!r.explosion) {
+                        r.y -= 5;
+                        if (Math.random() > 0.99 || r.y < canvas.height / 3) {
+                            r.explosion = true;
+                            for (let i = 0; i < 50; i++) {
+                                r.sparks.push({
+                                    x: r.x,
+                                    y: r.y,
+                                    dx: Math.random() * 4 - 2,
+                                    dy: Math.random() * 4 - 2,
+                                    color: r.color,
+                                });
+                            }
+                        }
+                    } else {
+                        r.sparks.forEach((s) => {
+                            s.x += s.dx;
+                            s.y += s.dy;
+                        });
+                    }
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawConfetti();
+                drawRockets();
+                drawSparks();
+                updateConfetti();
+                updateRockets();
+                requestAnimationFrame(animate);
+            }
+
+            createConfetti();
+            createRockets();
+            animate();
+        }
+    </script>
 </body>
 </html>
